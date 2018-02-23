@@ -1,6 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2013 rel. 2 sp2 (x64) (http://www.altova.com) by Aaron Hunt (private) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="ContextVariables">
+		<xs:annotation>
+			<xs:documentation>List of the mics variables</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Variable" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="Name" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>Name of variable used in the recommendation</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Value" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>Value of the variable used in the recommendation</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Unit" type="xs:string" nillable="true">
+								<xs:annotation>
+									<xs:documentation>Unit of the variable</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PlantPartRefs">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="PlantPartRef" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="Name" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>The part of the plant sampled</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1"/>
+										<xs:enumeration value="Root"/>
+										<xs:enumeration value="Stem"/>
+										<xs:enumeration value="Leaf"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element ref="Crop" minOccurs="0"/>
+						</xs:all>
+						<xs:attribute name="PlantPartID" type="xs:positiveInteger" use="required"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:unique name="uniquePlantPart">
+			<xs:selector xpath="PlantPartRef"/>
+			<xs:field xpath="@PlantPartID"/>
+		</xs:unique>
+	</xs:element>
 	<xs:element name="FMISMetaData">
 		<xs:annotation>
 			<xs:documentation>Element that contains data needed for FMIS "Field Management Information Systems" </xs:documentation>
@@ -11,6 +72,46 @@
 					<xs:annotation>
 						<xs:documentation>Unique code for the sample event. Often an internal UUID from an FMIS</xs:documentation>
 					</xs:annotation>
+				</xs:element>
+				<xs:element name="FMISOrganization" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Organization within the FMIS that the Grower(s) are under. Ex. Retail Location</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="Name" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>Name for the Organization</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Address" type="xs:string" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Address for the Organization</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Contact" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Contant information for the Organization</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="Name" type="xs:string">
+											<xs:annotation>
+												<xs:documentation>Name for the Organization Contact</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="ID" type="xs:string" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>ID for the Organization Contact</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="PhoneNumber" type="xs:string" minOccurs="0"/>
+										<xs:element name="Address" type="xs:string" minOccurs="0"/>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+						</xs:all>
+					</xs:complexType>
 				</xs:element>
 				<xs:element ref="FMISProfile" minOccurs="0">
 					<xs:annotation>
@@ -31,6 +132,7 @@
 						<xs:field xpath="@ID"/>
 					</xs:unique>
 				</xs:element>
+				<xs:element ref="ContextVariables" minOccurs="0"/>
 			</xs:all>
 		</xs:complexType>
 	</xs:element>
@@ -169,6 +271,7 @@
 						</xs:all>
 					</xs:complexType>
 				</xs:element>
+				<xs:element ref="ContextVariables" minOccurs="0"/>
 			</xs:all>
 		</xs:complexType>
 	</xs:element>
@@ -178,6 +281,9 @@
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:element name="TestPackageRefs">
+		<xs:annotation>
+			<xs:documentation>List of Test Packages to be used in thsi event</xs:documentation>
+		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="TestPackageRef" maxOccurs="unbounded">
@@ -249,6 +355,26 @@
 								<xs:simpleType>
 									<xs:restriction base="xs:string">
 										<xs:minLength value="1"/>
+										<xs:enumeration value="None"/>
+										<xs:enumeration value="mg/kg"/>
+										<xs:enumeration value="mg/L"/>
+										<xs:enumeration value="%"/>
+										<xs:enumeration value="meq/L"/>
+										<xs:enumeration value="g/cm3"/>
+										<xs:enumeration value="cmol/kg"/>
+										<xs:enumeration value="dS/m"/>
+										<xs:enumeration value="uS/m"/>
+										<xs:enumeration value="S/m"/>
+										<xs:enumeration value="ppm"/>
+										<xs:enumeration value="tons/ac"/>
+										<xs:enumeration value="lb/ac"/>
+										<xs:enumeration value="g/kg"/>
+										<xs:enumeration value="meq/100 g"/>
+										<xs:enumeration value="kg/ha"/>
+										<xs:enumeration value="lb/ac in"/>
+										<xs:enumeration value="lb/1000 gal"/>
+										<xs:enumeration value="lb/ton"/>
+										<xs:enumeration value="ppb"/>
 									</xs:restriction>
 								</xs:simpleType>
 							</xs:element>
@@ -270,7 +396,6 @@
 									<xs:restriction base="xs:string">
 										<xs:minLength value="1"/>
 										<xs:enumeration value="Measured"/>
-										<xs:enumeration value="Percent"/>
 										<xs:enumeration value="Calculated"/>
 										<xs:enumeration value="Index"/>
 									</xs:restriction>
@@ -296,6 +421,17 @@
 										<xs:enumeration value="H"/>
 									</xs:restriction>
 								</xs:simpleType>
+							</xs:element>
+							<xs:element name="ValueDescRange" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Value Range of the Assigned ValueDesc</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="MinValue" type="xs:float"/>
+										<xs:element name="MaxValue" type="xs:float"/>
+									</xs:all>
+								</xs:complexType>
 							</xs:element>
 						</xs:all>
 					</xs:complexType>
@@ -404,7 +540,6 @@
 									<xs:restriction base="xs:string">
 										<xs:minLength value="1"/>
 										<xs:enumeration value="Measured"/>
-										<xs:enumeration value="Percent"/>
 										<xs:enumeration value="Calculated"/>
 										<xs:enumeration value="Index"/>
 									</xs:restriction>
@@ -425,6 +560,17 @@
 										<xs:enumeration value="VH"/>
 									</xs:restriction>
 								</xs:simpleType>
+							</xs:element>
+							<xs:element name="ValueDescRange" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Value Range of the Assigned ValueDesc</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="MinValue" type="xs:float"/>
+										<xs:element name="MaxValue" type="xs:float"/>
+									</xs:all>
+								</xs:complexType>
 							</xs:element>
 							<xs:element name="LifeStageValues" minOccurs="0">
 								<xs:annotation>
@@ -556,7 +702,13 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="Comments" type="xs:string"/>
+	<xs:element name="Comments">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Comment" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
 	<xs:element name="TextureResults">
 		<xs:annotation>
 			<xs:documentation>Texture results for a sample</xs:documentation>
@@ -620,7 +772,7 @@
 			<xs:documentation>EventType is used to define the sample tyoe of the event. For Plant tissue, you also can define the growth stages and sub-growth stages</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
-			<xs:choice>
+			<xs:all>
 				<xs:element name="Soil"/>
 				<xs:element name="Plant">
 					<xs:complexType>
@@ -633,7 +785,7 @@
 				<xs:element name="Nematode"/>
 				<xs:element name="Water" minOccurs="0" maxOccurs="0"/>
 				<xs:element name="Residue" minOccurs="0" maxOccurs="0"/>
-			</xs:choice>
+			</xs:all>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="SampleMetaData">
@@ -650,6 +802,11 @@
 				<xs:element name="FMISSampleID" type="xs:string" nillable="true" minOccurs="0">
 					<xs:annotation>
 						<xs:documentation>Unique ID asigned by an FMIS for the sample</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="LabSampleID" type="xs:string" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Unique ID asiigned by a Lab for the sample</xs:documentation>
 					</xs:annotation>
 				</xs:element>
 				<xs:element name="SampleContainerID" type="xs:string" minOccurs="0">
@@ -669,9 +826,7 @@
 				</xs:element>
 				<xs:element name="OverwriteResult" type="xs:boolean" default="false" minOccurs="0">
 					<xs:annotation>
-						<xs:documentation>
-							Flag to indicate if this result is to overwrite any previous results. e.g. for correcting a mistake.
-						</xs:documentation>
+						<xs:documentation>Flag to indicate if this result is to override any pervious results</xs:documentation>
 					</xs:annotation>
 				</xs:element>
 				<xs:element name="Geometry" minOccurs="0">
@@ -683,7 +838,7 @@ Limit types to Point, Polygon and MultiPolygon</xs:documentation>
 					<xs:complexType>
 						<xs:simpleContent>
 							<xs:extension base="xs:string">
-								<xs:attribute name="epsg" type="xs:int" default="4326">
+								<xs:attribute name="EPSG" type="xs:int" default="4326">
 									<xs:annotation>
 										<xs:documentation>Projection ID of the Geometry
 Source: http://spatialreference.org/ref/?page=1
@@ -742,24 +897,7 @@ Default is WGS84 - Lat,Lon    epsg: 4326</xs:documentation>
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
-				<xs:element name="TestPackages" minOccurs="0">
-					<xs:annotation>
-						<xs:documentation>The lab test pagakes used for the sample.</xs:documentation>
-					</xs:annotation>
-					<xs:complexType>
-						<xs:sequence>
-							<xs:element name="TestPackage" maxOccurs="unbounded">
-								<xs:complexType>
-									<xs:attribute name="TestPackageID"/>
-								</xs:complexType>
-							</xs:element>
-						</xs:sequence>
-					</xs:complexType>
-					<xs:unique name="SampleTestPackage">
-						<xs:selector xpath="TestPackage"/>
-						<xs:field xpath="@TestPackageID"/>
-					</xs:unique>
-				</xs:element>
+				<xs:element ref="TestPackages" minOccurs="0"/>
 			</xs:all>
 		</xs:complexType>
 	</xs:element>
@@ -775,7 +913,7 @@ Default is WGS84 - Lat,Lon    epsg: 4326</xs:documentation>
 					</xs:annotation>
 					<xs:complexType>
 						<xs:all>
-							<xs:element name="Name">
+							<xs:element name="Name" minOccurs="0">
 								<xs:annotation>
 									<xs:documentation>Name given to the depth to be used for display by FMIS systems. ex Depth 1, 6"</xs:documentation>
 								</xs:annotation>
@@ -785,25 +923,32 @@ Default is WGS84 - Lat,Lon    epsg: 4326</xs:documentation>
 									</xs:restriction>
 								</xs:simpleType>
 							</xs:element>
-							<xs:element name="StartingDepth" type="xs:nonNegativeInteger" minOccurs="0">
+							<xs:element name="StartingDepth" type="xs:nonNegativeInteger">
 								<xs:annotation>
-									<xs:documentation>Depth at the sart of the column depth in the DepthUnit</xs:documentation>
+									<xs:documentation>Depth at the start of the column depth in the DepthUnit</xs:documentation>
 								</xs:annotation>
 							</xs:element>
-							<xs:element name="EndingDepth" type="xs:nonNegativeInteger" minOccurs="0">
+							<xs:element name="EndingDepth" type="xs:nonNegativeInteger">
 								<xs:annotation>
 									<xs:documentation>Depth at the end of the column depth in the DepthUnit</xs:documentation>
 								</xs:annotation>
 							</xs:element>
-							<xs:element name="ColumnDepth" type="xs:positiveInteger" minOccurs="0">
+							<xs:element name="ColumnDepth" type="xs:positiveInteger">
 								<xs:annotation>
 									<xs:documentation>Total column depth (End - Start) in the DepthUnit</xs:documentation>
 								</xs:annotation>
 							</xs:element>
-							<xs:element name="DepthUnit" type="xs:string" minOccurs="0">
+							<xs:element name="DepthUnit">
 								<xs:annotation>
 									<xs:documentation>Unit the depth is reported in.</xs:documentation>
 								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="in"/>
+										<xs:enumeration value="ft"/>
+										<xs:enumeration value="cm"/>
+									</xs:restriction>
+								</xs:simpleType>
 							</xs:element>
 						</xs:all>
 						<xs:attribute name="DepthID" type="xs:positiveInteger" use="required">
@@ -883,35 +1028,14 @@ Default is WGS84 - Lat,Lon    epsg: 4326</xs:documentation>
 				<xs:element name="Irrigated" type="xs:boolean" minOccurs="0"/>
 				<xs:element name="Tilled" type="xs:boolean" minOccurs="0"/>
 				<xs:element name="PrevCrop" type="xs:string" minOccurs="0"/>
-				<xs:element name="Variables" minOccurs="0">
-					<xs:annotation>
-						<xs:documentation>Used to store additional variables to be passed through</xs:documentation>
-					</xs:annotation>
-					<xs:complexType>
-						<xs:sequence>
-							<xs:element name="Variable" maxOccurs="unbounded">
-								<xs:complexType>
-									<xs:all>
-										<xs:element name="Name" type="xs:string"/>
-										<xs:element name="Value" type="xs:string"/>
-										<xs:element name="Unit" type="xs:string"/>
-									</xs:all>
-								</xs:complexType>
-							</xs:element>
-						</xs:sequence>
-					</xs:complexType>
-					<xs:unique name="UniqueVariableName">
-						<xs:selector xpath="Variable"/>
-						<xs:field xpath="Name"/>
-					</xs:unique>
-				</xs:element>
+				<xs:element ref="ContextVariables" minOccurs="0"/>
 			</xs:all>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="EventMetaData">
 		<xs:complexType>
 			<xs:all>
-				<xs:element name="EventCode">
+				<xs:element name="EventCode" minOccurs="0">
 					<xs:annotation>
 						<xs:documentation>Unique human readable code for the sample event. Often referred to a Layer ID</xs:documentation>
 					</xs:annotation>
@@ -921,7 +1045,7 @@ Default is WGS84 - Lat,Lon    epsg: 4326</xs:documentation>
 						</xs:restriction>
 					</xs:simpleType>
 				</xs:element>
-				<xs:element name="EventDate" type="xs:date">
+				<xs:element name="EventDate" type="xs:date" minOccurs="0">
 					<xs:annotation>
 						<xs:documentation>Date the sample event was collected in the field</xs:documentation>
 					</xs:annotation>
@@ -932,6 +1056,22 @@ Default is WGS84 - Lat,Lon    epsg: 4326</xs:documentation>
 						<xs:documentation>The date the data in the even is to expire for use in a recommendation</xs:documentation>
 					</xs:annotation>
 				</xs:element>
+				<xs:element ref="ContextVariables" minOccurs="0"/>
+				<xs:element name="Versions" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Version" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="Number" type="xs:float"/>
+										<xs:element ref="Comments"/>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element ref="GeoPoliticalLocation" minOccurs="0"/>
 			</xs:all>
 		</xs:complexType>
 	</xs:element>
@@ -965,42 +1105,61 @@ Default is WGS84 - Lat,Lon    epsg: 4326</xs:documentation>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="FMISProfile">
+		<xs:annotation>
+			<xs:documentation>Grower/Farm/Field Name and ID's for FMIS</xs:documentation>
+		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="Grower" minOccurs="0">
+				<xs:element name="Growers">
 					<xs:complexType>
-						<xs:simpleContent>
-							<xs:extension base="xs:string">
-								<xs:attribute name="ID" type="xs:string"/>
-							</xs:extension>
-						</xs:simpleContent>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="Farm" minOccurs="0">
-					<xs:complexType>
-						<xs:simpleContent>
-							<xs:extension base="xs:string">
-								<xs:attribute name="ID" type="xs:string"/>
-							</xs:extension>
-						</xs:simpleContent>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="Field" minOccurs="0">
-					<xs:complexType>
-						<xs:simpleContent>
-							<xs:extension base="xs:string">
-								<xs:attribute name="ID" type="xs:string"/>
-							</xs:extension>
-						</xs:simpleContent>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="Sub-Field" minOccurs="0">
-					<xs:complexType>
-						<xs:simpleContent>
-							<xs:extension base="xs:string">
-								<xs:attribute name="ID" type="xs:string"/>
-							</xs:extension>
-						</xs:simpleContent>
+						<xs:sequence>
+							<xs:element name="Grower" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:all>
+										<xs:element ref="ProfileMetaData"/>
+										<xs:element name="Farms" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Farm" minOccurs="0" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:all>
+																<xs:element ref="ProfileMetaData"/>
+																<xs:element name="Fields" minOccurs="0">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="Field" minOccurs="0" maxOccurs="unbounded">
+																				<xs:complexType>
+																					<xs:all>
+																						<xs:element ref="ProfileMetaData"/>
+																						<xs:element name="Sub-Fields" minOccurs="0">
+																							<xs:complexType>
+																								<xs:sequence>
+																									<xs:element name="Sub-Field" minOccurs="0" maxOccurs="unbounded">
+																										<xs:complexType>
+																											<xs:all>
+																												<xs:element ref="ProfileMetaData"/>
+																											</xs:all>
+																										</xs:complexType>
+																									</xs:element>
+																								</xs:sequence>
+																							</xs:complexType>
+																						</xs:element>
+																					</xs:all>
+																				</xs:complexType>
+																			</xs:element>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+															</xs:all>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>
@@ -1042,6 +1201,44 @@ Default is WGS84 - Lat,Lon    epsg: 4326</xs:documentation>
 					<xs:annotation>
 						<xs:documentation>Name for the recommendation</xs:documentation>
 					</xs:annotation>
+				</xs:element>
+				<xs:element name="RecType">
+					<xs:annotation>
+						<xs:documentation>Place to indicate if the rec is elemental or product</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:choice>
+							<xs:element name="Elemental"/>
+							<xs:element name="Product">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Elements">
+											<xs:complexType>
+												<xs:sequence maxOccurs="unbounded">
+													<xs:element name="Element">
+														<xs:complexType>
+															<xs:all>
+																<xs:element name="ProductName" type="xs:string"/>
+																<xs:element name="ProductID" type="xs:string"/>
+																<xs:element name="ElementBreakDown">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="Element" type="xs:string"/>
+																			<xs:element name="Percent" type="xs:float"/>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+															</xs:all>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:choice>
+					</xs:complexType>
 				</xs:element>
 				<xs:element name="Variables" minOccurs="0">
 					<xs:annotation>
@@ -1090,6 +1287,239 @@ Default is WGS84 - Lat,Lon    epsg: 4326</xs:documentation>
 					<xs:documentation>Id to be referenced in the sample</xs:documentation>
 				</xs:annotation>
 			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="TestPackages">
+		<xs:annotation>
+			<xs:documentation>The lab test pagakes used for the sample.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="TestPackage" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:attribute name="TestPackageID"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:unique name="SampleTestPackage">
+			<xs:selector xpath="TestPackage"/>
+			<xs:field xpath="@TestPackageID"/>
+		</xs:unique>
+	</xs:element>
+	<xs:element name="GeoPoliticalLocation">
+		<xs:annotation>
+			<xs:documentation>Location of event using geo political locations</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Country">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Name" type="xs:string"/>
+							<xs:element name="Code">
+								<xs:annotation>
+									<xs:documentation>Code using ISO 3166-1  alpha-2 code  https://en.wikipedia.org/wiki/ISO_3166-1</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="2"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="PrincipalSubdivision">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Name" type="xs:string"/>
+							<xs:element name="Code">
+								<xs:annotation>
+									<xs:documentation>State or Province Code from ISO 3166-2 https://en.wikipedia.org/wiki/ISO_3166-2</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="5"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="County">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Name" type="xs:string"/>
+							<xs:element name="Code">
+								<xs:annotation>
+									<xs:documentation>In the US, use county FIPS Code</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string"/>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Township" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Name" type="xs:string"/>
+							<xs:element name="Code">
+								<xs:simpleType>
+									<xs:restriction base="xs:string"/>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="LegalLandDescription" minOccurs="0">
+					<xs:complexType>
+						<xs:choice>
+							<xs:element name="PLS">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Meridian">
+											<xs:complexType>
+												<xs:all>
+													<xs:element name="Name" type="xs:string"/>
+												</xs:all>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Township">
+											<xs:complexType>
+												<xs:all>
+													<xs:element name="Value" type="xs:string"/>
+													<xs:element name="Direction">
+														<xs:simpleType>
+															<xs:restriction base="xs:string">
+																<xs:enumeration value="North"/>
+																<xs:enumeration value="South"/>
+															</xs:restriction>
+														</xs:simpleType>
+													</xs:element>
+												</xs:all>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Range">
+											<xs:complexType>
+												<xs:all>
+													<xs:element name="Value" type="xs:string"/>
+													<xs:element name="Direction">
+														<xs:simpleType>
+															<xs:restriction base="xs:string">
+																<xs:enumeration value="East"/>
+																<xs:enumeration value="West"/>
+															</xs:restriction>
+														</xs:simpleType>
+													</xs:element>
+												</xs:all>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Section">
+											<xs:complexType>
+												<xs:all>
+													<xs:element name="Value" type="xs:string"/>
+												</xs:all>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="QuarterSection" minOccurs="0">
+											<xs:complexType>
+												<xs:all>
+													<xs:element name="Value" type="xs:string"/>
+												</xs:all>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:choice>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CollectionMetadata">
+		<xs:annotation>
+			<xs:documentation>Metadata on the Organization Collecting the Samples</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="CollectionOrg">
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="Name"/>
+							<xs:element name="Address" type="xs:string"/>
+							<xs:element name="PhoneNumber" type="xs:string"/>
+							<xs:element name="Contact" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Contant information at the Collection Org</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="Name" type="xs:string"/>
+										<xs:element name="ID" type="xs:string" minOccurs="0"/>
+										<xs:element name="PhoneNumber" type="xs:string" minOccurs="0"/>
+										<xs:element name="Address" type="xs:string" minOccurs="0"/>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+				<xs:element ref="ContextVariables" minOccurs="0"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ProfileMetaData">
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="ID" type="xs:string" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>FMIS Internal ID for the Profile</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Name" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Display Name for the Profile</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Geometry" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>WKT Geometry
+Source: http://en.wikipedia.org/wiki/Well-known_text
+Limit types to Point, Polygon and MultiPolygon</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:string">
+								<xs:attribute name="EPSG" type="xs:string" default="4326">
+									<xs:annotation>
+										<xs:documentation>Projection ID of the Geometry
+Source: http://spatialreference.org/ref/?page=1
+Default is WGS84 - Lat,Lon    epsg: 4326</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Area" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Area of the opject</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:float">
+								<xs:attribute name="Unit" type="xs:string" use="required"/>
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element ref="ContextVariables" minOccurs="0"/>
+				<xs:element ref="GeoPoliticalLocation" minOccurs="0"/>
+			</xs:all>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

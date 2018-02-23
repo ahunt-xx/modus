@@ -1,0 +1,1005 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2013 rel. 2 sp2 (x64) (http://www.altova.com) by Aaron Hunt (private) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:m="http://www.w3.org/1998/Math/MathML" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://www.w3.org/1998/Math/MathML" schemaLocation="../mathml3/mathml3.xsd"/>
+	<xs:element name="ModusEquation">
+		<xs:annotation>
+			<xs:documentation>Modus standard for repersenting a field sample equation.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="EquationSetMetaData">
+					<xs:annotation>
+						<xs:documentation>Meta data for the equation set</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="Name" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>Display/common name for the equation</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Id" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>ID for the equation</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Version" type="xs:string" nillable="true">
+								<xs:annotation>
+									<xs:documentation>Verison of the equation</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Author">
+								<xs:annotation>
+									<xs:documentation>Contact informstion on the author of the equation</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="Name" type="xs:string">
+											<xs:annotation>
+												<xs:documentation>Name of the author</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Company" type="xs:string" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Company of the author</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Address" type="xs:string" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Address of the author</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="PhoneNumber" type="xs:string" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Phone number of the auther</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Email" type="xs:string" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Email of the author</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="DateCreated" type="xs:dateTime">
+								<xs:annotation>
+									<xs:documentation>Date the equation set xml was first created</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="DateLastUpdated" type="xs:dateTime">
+								<xs:annotation>
+									<xs:documentation>Date the last time the equation xml was updated</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="TargetSampleType">
+								<xs:annotation>
+									<xs:documentation>What sample type does this equation target.</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:choice>
+										<xs:element name="Soil"/>
+										<xs:element name="Plant"/>
+										<xs:element name="Nematode"/>
+									</xs:choice>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Comment" type="xs:string" minOccurs="0"/>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="EquationSet">
+					<xs:annotation>
+						<xs:documentation>The container for the equation set.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:choice>
+							<xs:element name="Soil">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element ref="GlobalVariables" minOccurs="0"/>
+										<xs:element ref="Methods" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>List of interal metthods that can be defined and used in any formula</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Commodity" maxOccurs="unbounded">
+											<xs:annotation>
+												<xs:documentation>The commodity for an equation</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element ref="GlobalVariables" minOccurs="0"/>
+													<xs:element ref="Methods" minOccurs="0">
+														<xs:annotation>
+															<xs:documentation>List of interal metthods that can be defined and used in any formula</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+													<xs:element name="Element" minOccurs="0" maxOccurs="unbounded">
+														<xs:annotation>
+															<xs:documentation>Element equation for a commodity</xs:documentation>
+														</xs:annotation>
+														<xs:complexType>
+															<xs:all>
+																<xs:element ref="GlobalVariables"/>
+																<xs:element name="Formula">
+																	<xs:annotation>
+																		<xs:documentation>The equation for a given commodity and element </xs:documentation>
+																	</xs:annotation>
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element ref="LocalVariables" minOccurs="0"/>
+																			<xs:element ref="Methods" minOccurs="0">
+																				<xs:annotation>
+																					<xs:documentation>List of interal metthods that can be defined and used in any formula</xs:documentation>
+																				</xs:annotation>
+																			</xs:element>
+																			<xs:element ref="Switch" minOccurs="0" maxOccurs="unbounded"/>
+																			<xs:element ref="Result" minOccurs="0"/>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+																<xs:element name="Validation" minOccurs="0">
+																	<xs:complexType>
+																		<xs:sequence maxOccurs="unbounded">
+																			<xs:element name="Test">
+																				<xs:complexType>
+																					<xs:sequence>
+																						<xs:element name="Inputs">
+																							<xs:complexType>
+																								<xs:sequence>
+																									<xs:element name="NutrientVariables">
+																										<xs:complexType>
+																											<xs:sequence>
+																												<xs:element name="NutrientVariable">
+																													<xs:complexType>
+																														<xs:sequence minOccurs="0" maxOccurs="unbounded">
+																															<xs:element name="Id" type="xs:string"/>
+																															<xs:element name="Value" type="xs:float" nillable="true"/>
+																															<xs:element name="Unit" type="xs:string" nillable="true"/>
+																														</xs:sequence>
+																													</xs:complexType>
+																												</xs:element>
+																											</xs:sequence>
+																										</xs:complexType>
+																									</xs:element>
+																									<xs:element name="UserVariables">
+																										<xs:complexType>
+																											<xs:sequence>
+																												<xs:element name="UserVariable">
+																													<xs:complexType>
+																														<xs:sequence minOccurs="0" maxOccurs="unbounded">
+																															<xs:element name="Id" type="xs:string"/>
+																															<xs:element name="Value" type="xs:float" nillable="true"/>
+																															<xs:element name="Unit" type="xs:string" nillable="true"/>
+																														</xs:sequence>
+																													</xs:complexType>
+																												</xs:element>
+																											</xs:sequence>
+																										</xs:complexType>
+																									</xs:element>
+																								</xs:sequence>
+																							</xs:complexType>
+																						</xs:element>
+																						<xs:element name="Results">
+																							<xs:complexType>
+																								<xs:sequence>
+																									<xs:element name="Value" type="xs:float"/>
+																									<xs:element name="Unit" type="xs:string"/>
+																								</xs:sequence>
+																							</xs:complexType>
+																						</xs:element>
+																					</xs:sequence>
+																					<xs:attribute name="Name" type="xs:string" use="required"/>
+																				</xs:complexType>
+																			</xs:element>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+															</xs:all>
+															<xs:attribute name="Name" type="xs:string" use="optional">
+																<xs:annotation>
+																	<xs:documentation>Name of the element</xs:documentation>
+																</xs:annotation>
+															</xs:attribute>
+															<xs:attribute name="ModusRecElementID" type="xs:string" use="required">
+																<xs:annotation>
+																	<xs:documentation>Modus ID for the rec element</xs:documentation>
+																</xs:annotation>
+															</xs:attribute>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+												<xs:attribute name="Name" type="xs:string" use="optional">
+													<xs:annotation>
+														<xs:documentation>Name of the commodity</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="ModusCommodityID" type="xs:string" use="required">
+													<xs:annotation>
+														<xs:documentation>Modus Commodity ID</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Tissue">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Commodity" maxOccurs="unbounded">
+											<xs:annotation>
+												<xs:documentation>The commodity for an equation</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="GlobalCommodityVariables" minOccurs="0">
+														<xs:annotation>
+															<xs:documentation>Global commodity input variables </xs:documentation>
+														</xs:annotation>
+														<xs:complexType>
+															<xs:all>
+																<xs:element ref="NutrientVariables" minOccurs="0"/>
+																<xs:element ref="UserVariables" minOccurs="0"/>
+																<xs:element ref="CustomVariables" minOccurs="0"/>
+																<xs:element ref="ReferenceVariables" minOccurs="0" maxOccurs="0"/>
+																<xs:element ref="FieldData" minOccurs="0" maxOccurs="0"/>
+															</xs:all>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="GrowthStage" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="GlobalGrowthStageVariables" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Global commodity input variables </xs:documentation>
+																	</xs:annotation>
+																	<xs:complexType>
+																		<xs:all>
+																			<xs:element ref="NutrientVariables" minOccurs="0"/>
+																			<xs:element ref="UserVariables" minOccurs="0"/>
+																			<xs:element ref="CustomVariables" minOccurs="0"/>
+																			<xs:element ref="ReferenceVariables" minOccurs="0" maxOccurs="0"/>
+																			<xs:element ref="FieldData" minOccurs="0" maxOccurs="0"/>
+																		</xs:all>
+																	</xs:complexType>
+																</xs:element>
+																<xs:element name="Element" maxOccurs="unbounded">
+																	<xs:annotation>
+																		<xs:documentation>Element equation for a commodity</xs:documentation>
+																	</xs:annotation>
+																	<xs:complexType>
+																		<xs:all>
+																			<xs:element name="GlobalElementVariables">
+																				<xs:annotation>
+																					<xs:documentation>Global Element Input variables for the equation</xs:documentation>
+																				</xs:annotation>
+																				<xs:complexType>
+																					<xs:all>
+																						<xs:element ref="NutrientVariables" minOccurs="0"/>
+																						<xs:element ref="UserVariables" minOccurs="0"/>
+																						<xs:element ref="CustomVariables" minOccurs="0"/>
+																						<xs:element ref="ReferenceVariables" minOccurs="0" maxOccurs="0"/>
+																						<xs:element ref="FieldData" minOccurs="0" maxOccurs="0"/>
+																					</xs:all>
+																				</xs:complexType>
+																			</xs:element>
+																			<xs:element name="Formula">
+																				<xs:annotation>
+																					<xs:documentation>The equation for a given commodity and element </xs:documentation>
+																				</xs:annotation>
+																				<xs:complexType>
+																					<xs:sequence>
+																						<xs:element ref="LocalVariables" minOccurs="0"/>
+																						<xs:element ref="Methods" minOccurs="0">
+																							<xs:annotation>
+																								<xs:documentation>List of interal metthods that can be defined and used in any formula</xs:documentation>
+																							</xs:annotation>
+																						</xs:element>
+																						<xs:element ref="Switch" minOccurs="0" maxOccurs="unbounded"/>
+																						<xs:element ref="Result" minOccurs="0"/>
+																					</xs:sequence>
+																				</xs:complexType>
+																			</xs:element>
+																		</xs:all>
+																		<xs:attribute name="Name" type="xs:string" use="optional">
+																			<xs:annotation>
+																				<xs:documentation>Name of the element</xs:documentation>
+																			</xs:annotation>
+																		</xs:attribute>
+																		<xs:attribute name="ModusRecElementID" type="xs:string" use="required">
+																			<xs:annotation>
+																				<xs:documentation>Modus ID for the rec element</xs:documentation>
+																			</xs:annotation>
+																		</xs:attribute>
+																	</xs:complexType>
+																</xs:element>
+															</xs:sequence>
+															<xs:attribute name="Name"/>
+															<xs:attribute name="ModusGrowthStatgeID" type="xs:string" use="required">
+																<xs:annotation>
+																	<xs:documentation>Modus Commodity ID</xs:documentation>
+																</xs:annotation>
+															</xs:attribute>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+												<xs:attribute name="Name" type="xs:string" use="optional">
+													<xs:annotation>
+														<xs:documentation>Name of the commodity</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="ModusCommodityID" type="xs:string" use="required">
+													<xs:annotation>
+														<xs:documentation>Modus Commodity ID</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:choice>
+						<xs:attribute name="ResultUnit" type="xs:string" use="required">
+							<xs:annotation>
+								<xs:documentation>The unit the result of the equation set will return</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="Version" type="xs:string" default="2.0"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Switch">
+		<xs:annotation>
+			<xs:documentation>Switch statement</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="LocalVariables" minOccurs="0"/>
+				<xs:element name="Cases">
+					<xs:annotation>
+						<xs:documentation>The cases in the switch statment</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Case" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Statement" type="xs:string">
+											<xs:annotation>
+												<xs:documentation>The conditional stament for the case in the switch</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element ref="Branch"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Default" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>The default case is none of the case statments are true</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="Branch"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="LocalVariables">
+		<xs:annotation>
+			<xs:documentation>Variables that can defined in the local scope</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="SubVariable" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:all>
+							<xs:element ref="Name"/>
+							<xs:element ref="Id"/>
+							<xs:element ref="Expression">
+								<xs:annotation>
+									<xs:documentation>Mathml formula</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:unique name="unique_local_variable">
+			<xs:selector xpath="SubVariable"/>
+			<xs:field xpath="Id"/>
+		</xs:unique>
+	</xs:element>
+	<xs:element name="Result">
+		<xs:annotation>
+			<xs:documentation>Result to return</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Expression"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Expression">
+		<xs:annotation>
+			<xs:documentation>Mathml formula</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="m:math"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Methods">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Method" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>A single method</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="Name"/>
+							<xs:element ref="Id"/>
+							<xs:element name="Parameters" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Parameters to be passed into the method</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Parameter" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element ref="Name"/>
+													<xs:element ref="Id"/>
+													<xs:element name="DefaultValue" type="xs:string" nillable="true">
+														<xs:annotation>
+															<xs:documentation>Default value to assign to the parameter if nothing is passed in.</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element ref="LocalVariables" minOccurs="0" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Variables that can defined in the local scope</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element ref="Switch" minOccurs="0" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Switch statement </xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element ref="Result" minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:unique name="unique_method">
+			<xs:selector xpath="Method"/>
+			<xs:field xpath="Id"/>
+		</xs:unique>
+	</xs:element>
+	<xs:element name="DictionaryObject">
+		<xs:annotation>
+			<xs:documentation>Object in the dictionary</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Key" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Key value of the object</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:choice>
+					<xs:element name="Value" type="xs:string">
+						<xs:annotation>
+							<xs:documentation>Value of the object</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element ref="Dictionary"/>
+					<xs:element ref="Array"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ArrayObject">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element name="Element" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Element in the array</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="Array"/>
+				<xs:element ref="Dictionary"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Name" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Display/common name for the method</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="Id" type="xs:NCName">
+		<xs:annotation>
+			<xs:documentation>Unique  internal id for the variable to be used in any formula</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="Array">
+		<xs:annotation>
+			<xs:documentation>Value of the variable if it is an array object</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ArrayObject" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Object in the array</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Dictionary">
+		<xs:annotation>
+			<xs:documentation>Value of the variable if it is an dictionary object </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="DictionaryObject" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="NutrientVariables">
+		<xs:annotation>
+			<xs:documentation>Variables from nutrient analysis</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="NutrientVariable" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Nutrient variable</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="Name"/>
+							<xs:element ref="Id"/>
+							<xs:element ref="VariableType"/>
+							<xs:element name="ValueType">
+								<xs:annotation>
+									<xs:documentation>Measured, Index, Caculated</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="Measured"/>
+										<xs:enumeration value="Index"/>
+										<xs:enumeration value="Caculated"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="Element" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>Modus name for the element</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Depth" nillable="true" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>The dame of the target element depth</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="StartingDepth" type="xs:nonNegativeInteger">
+											<xs:annotation>
+												<xs:documentation>Depth at the start of the column depth in the DepthUnit</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="EndingDepth" type="xs:nonNegativeInteger">
+											<xs:annotation>
+												<xs:documentation>Depth at the end of the column depth in the DepthUnit</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="DepthUnit">
+											<xs:annotation>
+												<xs:documentation>Unit the depth is reported in.</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:enumeration value="in"/>
+													<xs:enumeration value="ft"/>
+													<xs:enumeration value="cm"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Component">
+								<xs:annotation>
+									<xs:documentation>The component of the elkement to be used in this variable. i.e Value of the nutrient or the extraction/test used</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="Value"/>
+										<xs:enumeration value="ValueDescription"/>
+										<xs:enumeration value="Extraction"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="Unit" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>Unit of the variable</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="ModusTestID" type="xs:string" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Limit to defined MODUS test ID</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="DefaultValue" type="xs:string" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Default value of the variable if no vlaue is found. Only include if you want a defult to be filled in.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:unique name="unique_nutrient_variable">
+			<xs:selector xpath="NutrientVariable"/>
+			<xs:field xpath="Id"/>
+		</xs:unique>
+	</xs:element>
+	<xs:element name="UserVariables">
+		<xs:annotation>
+			<xs:documentation>Variables that are requested from the user</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="UserVariable" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="Name"/>
+							<xs:element ref="Id"/>
+							<xs:element ref="VariableType"/>
+							<xs:element name="Interface">
+								<xs:annotation>
+									<xs:documentation>Data need for an FMIS to display the user variables</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:choice>
+										<xs:element name="String">
+											<xs:annotation>
+												<xs:documentation>Diispaly a string UI componet</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Boolean">
+											<xs:annotation>
+												<xs:documentation>Display a boolean  UI componet</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="List">
+											<xs:annotation>
+												<xs:documentation>Display a list/combo box    UI componet</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Option" maxOccurs="unbounded">
+														<xs:annotation>
+															<xs:documentation>Option to display in the list box</xs:documentation>
+														</xs:annotation>
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Key" type="xs:string">
+																	<xs:annotation>
+																		<xs:documentation>The key/name of the option</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="Value" type="xs:string">
+																	<xs:annotation>
+																		<xs:documentation>Value of the option</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="Default" type="xs:boolean" default="false">
+																	<xs:annotation>
+																		<xs:documentation>Set if this option should be selected by default</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Numeric"/>
+									</xs:choice>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="DefaultValue" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>Default value of the variable</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Unit" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>Unit of the variable</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:unique name="unique_user_variables">
+			<xs:selector xpath="UserVariable"/>
+			<xs:field xpath="Id"/>
+		</xs:unique>
+	</xs:element>
+	<xs:element name="CustomVariables">
+		<xs:annotation>
+			<xs:documentation>Custom variables that are internal tot he equation. Example would be a lookup list of indexs</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="CustomVariable" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="Name"/>
+							<xs:element ref="Id"/>
+							<xs:element ref="VariableType"/>
+							<xs:element name="CustomVariableValue">
+								<xs:annotation>
+									<xs:documentation>Contains the value of the variable</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:choice>
+										<xs:element name="String">
+											<xs:annotation>
+												<xs:documentation>Value of the variable if it is a string object</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="StringObject">
+														<xs:annotation>
+															<xs:documentation>String Object</xs:documentation>
+														</xs:annotation>
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Value" type="xs:string"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Numeric">
+											<xs:annotation>
+												<xs:documentation>Value of the variable if it is a numeric object</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="NumericObject">
+														<xs:annotation>
+															<xs:documentation>Numeric Object</xs:documentation>
+														</xs:annotation>
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Value" type="xs:float"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element ref="Array"/>
+										<xs:element ref="Dictionary"/>
+									</xs:choice>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Unit" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>Unit of the variable</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:unique name="unique_custom_variables">
+			<xs:selector xpath="CustomVariable"/>
+			<xs:field xpath="Id"/>
+		</xs:unique>
+	</xs:element>
+	<xs:element name="ReferenceVariables">
+		<xs:annotation>
+			<xs:documentation>Variables for standard reference database like SSURGO </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ReferenceVariable" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="Name"/>
+							<xs:element ref="Id"/>
+							<xs:element ref="VariableType"/>
+							<xs:element name="Layer" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>Name of the Reference Data Layer to Use</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Attribute" type="xs:string" nillable="true">
+								<xs:annotation>
+									<xs:documentation>Name of the Layer Attribute to Use</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="FieldData">
+		<xs:annotation>
+			<xs:documentation>Variables for field data set like Yield</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Yield">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Variable" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element ref="Name"/>
+										<xs:element ref="Id"/>
+										<xs:element ref="VariableType"/>
+										<xs:element name="Commodity" type="xs:string"/>
+										<xs:element name="RecordType">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:enumeration value="logged"/>
+													<xs:enumeration value="recorded"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="Component">
+											<xs:complexType>
+												<xs:choice>
+													<xs:element name="Flow">
+														<xs:complexType>
+															<xs:attribute name="Unit" type="xs:string"/>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Moisture">
+														<xs:complexType>
+															<xs:attribute name="Unit" type="xs:string"/>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Elevation">
+														<xs:complexType>
+															<xs:attribute name="Unit" type="xs:string"/>
+														</xs:complexType>
+													</xs:element>
+												</xs:choice>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Veris" minOccurs="0" maxOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Variable" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Name"/>
+										<xs:element name="Id" type="xs:ID"/>
+										<xs:element name="Layer">
+											<xs:complexType>
+												<xs:choice>
+													<xs:element name="Shallow"/>
+													<xs:element name="Deep"/>
+												</xs:choice>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Zone" minOccurs="0" maxOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Variable" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Name"/>
+										<xs:element name="Id" type="xs:ID"/>
+										<xs:element name="Layer">
+											<xs:complexType>
+												<xs:choice>
+													<xs:element name="Management"/>
+													<xs:element name="YieldPotential"/>
+												</xs:choice>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="VariableType">
+		<xs:annotation>
+			<xs:documentation>Variable type: i.e. String, Numeric or Boolean</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="String"/>
+				<xs:enumeration value="Numeric"/>
+				<xs:enumeration value="Boolean"/>
+				<xs:enumeration value="Array"/>
+				<xs:enumeration value="Dictionary"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="GlobalVariables">
+		<xs:annotation>
+			<xs:documentation>Global commodity input variables </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="NutrientVariables" minOccurs="0"/>
+				<xs:element ref="UserVariables" minOccurs="0"/>
+				<xs:element ref="CustomVariables" minOccurs="0"/>
+				<xs:element ref="ReferenceVariables" minOccurs="0"/>
+				<xs:element ref="FieldData" minOccurs="0" maxOccurs="0"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Branch">
+		<xs:annotation>
+			<xs:documentation>The branch to execute if the conditional stament is true</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:annotation>
+					<xs:documentation>Choice of either a return or another switch</xs:documentation>
+				</xs:annotation>
+				<xs:element ref="Assign" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="Switch" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="Result" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Assign">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Expression"/>
+			</xs:sequence>
+			<xs:attribute name="VariableId" type="xs:NCName" use="required"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

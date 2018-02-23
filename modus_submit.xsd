@@ -2,23 +2,25 @@
 <!-- edited with XMLSpy v2013 rel. 2 sp2 (x64) (http://www.altova.com) by Aaron Hunt (private) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:include schemaLocation="modus_global.xsd"/>
+	<xs:include schemaLocation="modus_collect.xsd"/>
 	<xs:element name="ModusSubmit">
 		<xs:annotation>
 			<xs:documentation>Modus document for submitting sample events to FMIS</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="Event">
+				<xs:element name="Event" maxOccurs="unbounded">
 					<xs:complexType>
 						<xs:all>
 							<xs:element ref="EventMetaData"/>
+							<xs:element ref="CollectionMetadata" minOccurs="0"/>
 							<xs:element ref="FMISMetaData" minOccurs="0"/>
 							<xs:element ref="LabMetaData"/>
 							<xs:element ref="SubmissionAttributes"/>
 							<xs:element name="EventSamples">
 								<xs:complexType>
-									<xs:choice>
-										<xs:element name="Soil">
+									<xs:all>
+										<xs:element name="Soil" minOccurs="0">
 											<xs:complexType>
 												<xs:sequence>
 													<xs:element ref="DepthRefs"/>
@@ -44,13 +46,25 @@
 												</xs:sequence>
 											</xs:complexType>
 										</xs:element>
-										<xs:element name="Plant">
+										<xs:element name="Plant" minOccurs="0">
 											<xs:complexType>
 												<xs:sequence>
+													<xs:element ref="PlantPartRefs"/>
 													<xs:element name="PlantSample" maxOccurs="unbounded">
 														<xs:complexType>
 															<xs:all>
 																<xs:element ref="SampleMetaData"/>
+																<xs:element name="PlantParts">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="PlantPart" maxOccurs="unbounded">
+																				<xs:complexType>
+																					<xs:attribute name="PlantPartID" type="xs:positiveInteger" use="required"/>
+																				</xs:complexType>
+																			</xs:element>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
 																<xs:element ref="Comments" minOccurs="0"/>
 															</xs:all>
 														</xs:complexType>
@@ -58,7 +72,7 @@
 												</xs:sequence>
 											</xs:complexType>
 										</xs:element>
-										<xs:element name="Nematode">
+										<xs:element name="Nematode" minOccurs="0">
 											<xs:complexType>
 												<xs:sequence>
 													<xs:element ref="DepthRefs"/>
@@ -84,15 +98,13 @@
 												</xs:sequence>
 											</xs:complexType>
 										</xs:element>
-										<xs:element name="Water" minOccurs="0" maxOccurs="0">
+										<xs:element name="Feed" minOccurs="0">
 											<xs:complexType>
 												<xs:sequence>
-													<xs:element name="WaterSample" maxOccurs="unbounded">
+													<xs:element name="FeedSample">
 														<xs:complexType>
 															<xs:all>
 																<xs:element ref="SampleMetaData"/>
-																<xs:element name="Source" type="xs:string" minOccurs="0"/>
-																<xs:element ref="NutrientResults" minOccurs="0"/>
 																<xs:element ref="Comments" minOccurs="0"/>
 															</xs:all>
 														</xs:complexType>
@@ -100,30 +112,16 @@
 												</xs:sequence>
 											</xs:complexType>
 										</xs:element>
-										<xs:element name="Residue" minOccurs="0" maxOccurs="0">
-											<xs:complexType>
-												<xs:sequence>
-													<xs:element name="ResidueSample" maxOccurs="unbounded">
-														<xs:complexType>
-															<xs:all>
-																<xs:element ref="SampleMetaData"/>
-																<xs:element ref="ResidueResults" minOccurs="0"/>
-																<xs:element ref="Comments" minOccurs="0"/>
-															</xs:all>
-														</xs:complexType>
-													</xs:element>
-												</xs:sequence>
-											</xs:complexType>
-										</xs:element>
-									</xs:choice>
+									</xs:all>
 								</xs:complexType>
 							</xs:element>
 							<xs:element name="Comments" type="xs:string" minOccurs="0"/>
+							<xs:element ref="ModusCollect" minOccurs="0"/>
 						</xs:all>
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>
-			<xs:attribute name="Version" type="xs:string" default="1.0"/>
+			<xs:attribute name="Version" type="xs:string" use="required" fixed="2.0"/>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

@@ -3,6 +3,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:include schemaLocation="modus_global.xsd"/>
 	<xs:include schemaLocation="modus_submit.xsd"/>
+	<xs:include schemaLocation="modus_collect.xsd"/>
 	<xs:element name="ModusResult">
 		<xs:annotation>
 			<xs:documentation>Modus document for submission of lab results to FMIS</xs:documentation>
@@ -12,42 +13,17 @@
 				<xs:element name="Event" maxOccurs="unbounded">
 					<xs:complexType>
 						<xs:all>
-							<xs:element name="EventMetaData">
-								<xs:complexType>
-									<xs:all>
-										<xs:element name="EventCode" nillable="true">
-											<xs:annotation>
-												<xs:documentation>Unique human readable code for the sample event. Often referred to a Layer ID</xs:documentation>
-											</xs:annotation>
-											<xs:simpleType>
-												<xs:restriction base="xs:string">
-													<xs:minLength value="0"/>
-												</xs:restriction>
-											</xs:simpleType>
-										</xs:element>
-										<xs:element name="EventDate" type="xs:date" minOccurs="0">
-											<xs:annotation>
-												<xs:documentation>Date the sample event was collected in the field</xs:documentation>
-											</xs:annotation>
-										</xs:element>
-										<xs:element ref="EventType"/>
-										<xs:element name="EventExpirationDate" type="xs:date" minOccurs="0">
-											<xs:annotation>
-												<xs:documentation>The date the data in the even is to expire for use in a recommendation</xs:documentation>
-											</xs:annotation>
-										</xs:element>
-									</xs:all>
-								</xs:complexType>
-							</xs:element>
+							<xs:element ref="EventMetaData"/>
 							<xs:element ref="LabMetaData"/>
+							<xs:element ref="CollectionMetadata" minOccurs="0"/>
 							<xs:element ref="FMISMetaData" minOccurs="0"/>
 							<xs:element name="EventSamples">
 								<xs:annotation>
 									<xs:documentation>Element contains the field sample points and data</xs:documentation>
 								</xs:annotation>
 								<xs:complexType>
-									<xs:choice>
-										<xs:element name="Soil">
+									<xs:all>
+										<xs:element name="Soil" minOccurs="0">
 											<xs:annotation>
 												<xs:documentation>Element to place samples and results from a soil sample event</xs:documentation>
 											</xs:annotation>
@@ -86,6 +62,10 @@
 																			</xs:element>
 																		</xs:sequence>
 																	</xs:complexType>
+																	<xs:unique name="DepthID">
+																		<xs:selector xpath="Depth"/>
+																		<xs:field xpath="@DepthID"/>
+																	</xs:unique>
 																</xs:element>
 																<xs:element ref="NutrientRecommendations" minOccurs="0"/>
 																<xs:element ref="Comments" minOccurs="0"/>
@@ -95,18 +75,32 @@
 												</xs:sequence>
 											</xs:complexType>
 										</xs:element>
-										<xs:element name="Plant">
+										<xs:element name="Plant" minOccurs="0">
 											<xs:annotation>
 												<xs:documentation>Element to place samples and results from a plant tissue sample event</xs:documentation>
 											</xs:annotation>
 											<xs:complexType>
 												<xs:sequence>
+													<xs:element ref="PlantPartRefs"/>
 													<xs:element ref="RecommendationRefs" minOccurs="0"/>
 													<xs:element name="PlantSample" maxOccurs="unbounded">
 														<xs:complexType>
 															<xs:all>
 																<xs:element ref="SampleMetaData"/>
-																<xs:element ref="NutrientResults" minOccurs="0"/>
+																<xs:element name="PlantParts">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="PlantPart" maxOccurs="unbounded">
+																				<xs:complexType>
+																					<xs:all>
+																						<xs:element ref="NutrientResults" minOccurs="0"/>
+																					</xs:all>
+																					<xs:attribute name="PlantPartID" type="xs:positiveInteger" use="required"/>
+																				</xs:complexType>
+																			</xs:element>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
 																<xs:element ref="NutrientRecommendations" minOccurs="0"/>
 																<xs:element ref="Comments" minOccurs="0"/>
 															</xs:all>
@@ -115,7 +109,7 @@
 												</xs:sequence>
 											</xs:complexType>
 										</xs:element>
-										<xs:element name="Nematode">
+										<xs:element name="Nematode" minOccurs="0">
 											<xs:annotation>
 												<xs:documentation>Element to place samples and results from a nematode sample event</xs:documentation>
 											</xs:annotation>
@@ -147,14 +141,13 @@
 												</xs:sequence>
 											</xs:complexType>
 										</xs:element>
-										<xs:element name="Water" minOccurs="0" maxOccurs="0">
+										<xs:element name="Feed" minOccurs="0">
 											<xs:complexType>
 												<xs:sequence>
-													<xs:element name="WaterSample" maxOccurs="unbounded">
+													<xs:element name="FeedSample">
 														<xs:complexType>
 															<xs:all>
 																<xs:element ref="SampleMetaData"/>
-																<xs:element name="Source" type="xs:string" minOccurs="0"/>
 																<xs:element ref="NutrientResults" minOccurs="0"/>
 																<xs:element ref="Comments" minOccurs="0"/>
 															</xs:all>
@@ -163,31 +156,80 @@
 												</xs:sequence>
 											</xs:complexType>
 										</xs:element>
-										<xs:element name="Residue" minOccurs="0" maxOccurs="0">
-											<xs:complexType>
-												<xs:sequence>
-													<xs:element name="ResidueSample" maxOccurs="unbounded">
-														<xs:complexType>
-															<xs:all>
-																<xs:element ref="SampleMetaData"/>
-																<xs:element ref="ResidueResults" minOccurs="0"/>
-																<xs:element ref="Comments" minOccurs="0"/>
-															</xs:all>
-														</xs:complexType>
-													</xs:element>
-												</xs:sequence>
-											</xs:complexType>
-										</xs:element>
-									</xs:choice>
+									</xs:all>
 								</xs:complexType>
 							</xs:element>
-							<xs:element name="Comments" type="xs:string" minOccurs="0"/>
+							<xs:element name="EventBoundaries" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Element conatins a boundary that has been collected at the same tiime as the samples</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="EventBoundary" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:all>
+													<xs:element name="ProfileLevel">
+														<xs:simpleType>
+															<xs:restriction base="xs:string">
+																<xs:enumeration value="Grower"/>
+																<xs:enumeration value="Farm"/>
+																<xs:enumeration value="Field"/>
+																<xs:enumeration value="Sub-Field"/>
+															</xs:restriction>
+														</xs:simpleType>
+													</xs:element>
+													<xs:element name="DateCollected" type="xs:dateTime"/>
+													<xs:element name="Geometry">
+														<xs:annotation>
+															<xs:documentation>WKT Geometry
+Source: http://en.wikipedia.org/wiki/Well-known_text
+Limit types to Point, Polygon and MultiPolygon</xs:documentation>
+														</xs:annotation>
+														<xs:complexType>
+															<xs:simpleContent>
+																<xs:extension base="xs:string">
+																	<xs:attribute name="EPSG" type="xs:string" default="4326">
+																		<xs:annotation>
+																			<xs:documentation>Projection ID of the Geometry
+Source: http://spatialreference.org/ref/?page=1
+Default is WGS84 - Lat,Lon    epsg: 4326</xs:documentation>
+																		</xs:annotation>
+																	</xs:attribute>
+																</xs:extension>
+															</xs:simpleContent>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Area" minOccurs="0">
+														<xs:annotation>
+															<xs:documentation>Area of the opject</xs:documentation>
+														</xs:annotation>
+														<xs:complexType>
+															<xs:simpleContent>
+																<xs:extension base="xs:float">
+																	<xs:attribute name="Unit" type="xs:string" use="required"/>
+																</xs:extension>
+															</xs:simpleContent>
+														</xs:complexType>
+													</xs:element>
+												</xs:all>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+								<xs:unique name="ProfileLevel">
+									<xs:selector xpath="EventBoundary"/>
+									<xs:field xpath="ProfileLevel"/>
+								</xs:unique>
+							</xs:element>
+							<xs:element ref="ModusCollect" minOccurs="0"/>
 							<xs:element ref="ModusSubmit" minOccurs="0"/>
+							<xs:element name="Comments" type="xs:string" minOccurs="0"/>
 						</xs:all>
+						<xs:attribute name="Version" type="xs:string" default="1.0"/>
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>
-			<xs:attribute name="Version" type="xs:string" default="1.0"/>
+			<xs:attribute name="Version" type="xs:string" use="required" fixed="2.0"/>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

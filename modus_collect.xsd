@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2013 rel. 2 sp2 (x64) (http://www.altova.com) by Aaron Hunt (private) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="modus_global.xsd"/>
+	<xs:element name="ModusCollect">
+		<xs:annotation>
+			<xs:documentation>Comment describing your root element</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element name="Collection">
+					<xs:complexType>
+						<xs:all>
+							<xs:element ref="CollectionMetadata"/>
+							<xs:element ref="FMISProfile"/>
+							<xs:element name="FMISTargetSamplesLayers">
+								<xs:annotation>
+									<xs:documentation>Target Sample from the FMIS</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="TargetSampleLayer" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:choice>
+													<xs:element name="Grid">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Density" type="xs:float">
+																	<xs:annotation>
+																		<xs:documentation>Value of the grid size</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="Unit" type="xs:string">
+																	<xs:annotation>
+																		<xs:documentation>Unit of the grid. ex. ac/sample</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Directed">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="DirectedSamples">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="DirectedSample" maxOccurs="unbounded">
+																				<xs:complexType>
+																					<xs:all>
+																						<xs:element name="SampleNumber" type="xs:string">
+																							<xs:annotation>
+																								<xs:documentation>Sample Number give the sample by during sample collection</xs:documentation>
+																							</xs:annotation>
+																						</xs:element>
+																						<xs:element name="FMISSampleID" type="xs:string" nillable="true" minOccurs="0">
+																							<xs:annotation>
+																								<xs:documentation>Unique ID asigned by an FMIS for the sample</xs:documentation>
+																							</xs:annotation>
+																						</xs:element>
+																						<xs:element name="SampleGroupID" type="xs:positiveInteger" minOccurs="0">
+																							<xs:annotation>
+																								<xs:documentation>ID number to reference different samples as one group</xs:documentation>
+																							</xs:annotation>
+																						</xs:element>
+																						<xs:element name="Geometry" minOccurs="0">
+																							<xs:annotation>
+																								<xs:documentation>WKT Geometry
+Source: http://en.wikipedia.org/wiki/Well-known_text
+Limit types to Point, Polygon and MultiPolygon</xs:documentation>
+																							</xs:annotation>
+																							<xs:complexType>
+																								<xs:simpleContent>
+																									<xs:extension base="xs:string">
+																										<xs:attribute name="EPSG" type="xs:int" default="4326">
+																											<xs:annotation>
+																												<xs:documentation>Projection ID of the Geometry
+Source: http://spatialreference.org/ref/?page=1
+Default is WGS84 - Lat,Lon    epsg: 4326</xs:documentation>
+																											</xs:annotation>
+																										</xs:attribute>
+																									</xs:extension>
+																								</xs:simpleContent>
+																							</xs:complexType>
+																						</xs:element>
+																						<xs:element name="SubSamples" minOccurs="0">
+																							<xs:annotation>
+																								<xs:documentation>Sub Samples is where the location of the cores within a sample can be recored</xs:documentation>
+																							</xs:annotation>
+																							<xs:complexType>
+																								<xs:sequence>
+																									<xs:element name="SubSample" maxOccurs="unbounded">
+																										<xs:annotation>
+																											<xs:documentation>One sub sample / core</xs:documentation>
+																										</xs:annotation>
+																										<xs:complexType>
+																											<xs:all>
+																												<xs:element name="SubSampleNumber" type="xs:nonNegativeInteger">
+																													<xs:annotation>
+																														<xs:documentation>ID number assigned during collection.</xs:documentation>
+																													</xs:annotation>
+																												</xs:element>
+																												<xs:element name="SubSampleID" type="xs:string" nillable="true" minOccurs="0">
+																													<xs:annotation>
+																														<xs:documentation>Unique ID for the sub-sample asigned by an FMIS</xs:documentation>
+																													</xs:annotation>
+																												</xs:element>
+																												<xs:element name="Geometry" minOccurs="0">
+																													<xs:annotation>
+																														<xs:documentation>WKT Geometry
+Source: http://en.wikipedia.org/wiki/Well-known_text
+Limit types to Point, Polygon and MultiPolygon</xs:documentation>
+																													</xs:annotation>
+																													<xs:complexType>
+																														<xs:simpleContent>
+																															<xs:extension base="xs:string">
+																																<xs:attribute name="epsg" type="xs:int" default="4326">
+																																	<xs:annotation>
+																																		<xs:documentation>Projection ID of the Geometry
+Source: http://spatialreference.org/ref/?page=1
+Default is WGS84 - Lat,Lon    epsg: 4326</xs:documentation>
+																																	</xs:annotation>
+																																</xs:attribute>
+																															</xs:extension>
+																														</xs:simpleContent>
+																													</xs:complexType>
+																												</xs:element>
+																											</xs:all>
+																										</xs:complexType>
+																									</xs:element>
+																								</xs:sequence>
+																							</xs:complexType>
+																						</xs:element>
+																						<xs:element ref="TestPackages" minOccurs="0"/>
+																					</xs:all>
+																				</xs:complexType>
+																			</xs:element>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Composite"/>
+												</xs:choice>
+												<xs:attribute name="TargetSampleLayerID" use="required"/>
+												<xs:attribute name="FMISProfileLevel" use="required">
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:enumeration value="Grower"/>
+															<xs:enumeration value="Farm"/>
+															<xs:enumeration value="Field"/>
+															<xs:enumeration value="Sub-Field"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+								<xs:unique name="TargetSampleLayerUnique">
+									<xs:selector xpath="TargetSampleLayer"/>
+									<xs:field xpath="@TargetSampleLayerID"/>
+								</xs:unique>
+							</xs:element>
+							<xs:element name="CollectionAttributes">
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="CollectionTargetDate" type="xs:date" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Date the sample event was collected in the field</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="CollectionBy" type="xs:string" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Person collecting the samples</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="CollectionFor" type="xs:string" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Person or company the sample is being submited for.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="CollectBoundary" type="xs:boolean" default="false" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Boolean to indicate if a boundary colection was requested</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="CollectionProfileLevel">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:enumeration value="Grower"/>
+													<xs:enumeration value="Farm"/>
+													<xs:enumeration value="Field"/>
+													<xs:enumeration value="Sub-Field"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="CollectionLab">
+											<xs:annotation>
+												<xs:documentation>Detals about the Lab the collected samples are to be sent to.</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:all>
+													<xs:element name="LabName" type="xs:string">
+														<xs:annotation>
+															<xs:documentation>The name of the lab that ran the results</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+													<xs:element name="ClientAccount" minOccurs="0">
+														<xs:annotation>
+															<xs:documentation>End user lab account information</xs:documentation>
+														</xs:annotation>
+														<xs:complexType>
+															<xs:all>
+																<xs:element name="AccountNumber" type="xs:string"/>
+																<xs:element name="Name" type="xs:string" minOccurs="0"/>
+																<xs:element name="Company" type="xs:string" minOccurs="0"/>
+																<xs:element name="City" type="xs:string" minOccurs="0"/>
+																<xs:element name="State" type="xs:string" minOccurs="0"/>
+															</xs:all>
+														</xs:complexType>
+													</xs:element>
+													<xs:element ref="RecommendationRequests" minOccurs="0">
+														<xs:annotation>
+															<xs:documentation>Reference documntation for a lab recommendation</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+													<xs:element ref="ContextVariables" minOccurs="0"/>
+													<xs:element ref="TestPackageRefs" minOccurs="0"/>
+												</xs:all>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="CollectionType">
+											<xs:annotation>
+												<xs:documentation>List what kind os samples are ot be collected</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:all>
+													<xs:element name="Soil" minOccurs="0"/>
+													<xs:element name="Tissue" minOccurs="0"/>
+													<xs:element name="Nematode" minOccurs="0"/>
+													<xs:element name="Feed" minOccurs="0"/>
+												</xs:all>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="CollectionPackages" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>List of what testing packages pre type are requested from the lab</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:all>
+													<xs:element name="Soil" minOccurs="0">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element ref="TestPackages" minOccurs="0"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Tissue" minOccurs="0">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element ref="TestPackages" minOccurs="0"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Nematode" minOccurs="0">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element ref="TestPackages" minOccurs="0"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Feed" minOccurs="0">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element ref="TestPackages" minOccurs="0"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:all>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="CollectionTargets" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>For each sample type, what target layers is to be used for collection guidence</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:all>
+													<xs:element name="Soil" minOccurs="0">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element ref="DepthRefs"/>
+																<xs:element name="Depths">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="Depth" maxOccurs="unbounded">
+																				<xs:complexType>
+																					<xs:sequence>
+																						<xs:element name="TargetSampleLayerID"/>
+																						<xs:element ref="TestPackages" minOccurs="0"/>
+																					</xs:sequence>
+																					<xs:attribute name="DepthID" type="xs:positiveInteger" use="required"/>
+																				</xs:complexType>
+																			</xs:element>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Tissue" minOccurs="0">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element ref="PlantPartRefs"/>
+																<xs:element name="PlantParts">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="PlantPart" maxOccurs="unbounded">
+																				<xs:complexType>
+																					<xs:sequence>
+																						<xs:element name="TargetSampleLayerID"/>
+																						<xs:element ref="TestPackages" minOccurs="0"/>
+																					</xs:sequence>
+																					<xs:attribute name="PlantPartID" type="xs:positiveInteger" use="required"/>
+																				</xs:complexType>
+																			</xs:element>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Nematode" minOccurs="0">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element ref="DepthRefs"/>
+																<xs:element name="Depths">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="Depth" maxOccurs="unbounded">
+																				<xs:complexType>
+																					<xs:sequence>
+																						<xs:element name="TargetSampleLayerID"/>
+																						<xs:element ref="TestPackages" minOccurs="0"/>
+																					</xs:sequence>
+																					<xs:attribute name="DepthID" type="xs:positiveInteger" use="required"/>
+																				</xs:complexType>
+																			</xs:element>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Feed" minOccurs="0">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="TargetSampleLayerID"/>
+																<xs:element ref="TestPackages" minOccurs="0"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:all>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Instructions" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Instruction" type="xs:string" maxOccurs="unbounded"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element ref="ContextVariables" minOccurs="0"/>
+										<xs:element ref="GeoPoliticalLocation" minOccurs="0"/>
+										<xs:element ref="Comments" minOccurs="0"/>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="Version" type="xs:string" use="required" fixed="2.0"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
