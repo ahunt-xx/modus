@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2013 rel. 2 (http://www.altova.com) by Aaron Hunt (private) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="ModusLabServcies">
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="LabMetaData">
+					<xs:annotation>
+						<xs:documentation>Publishing Lab Information</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="LabName" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>Name of the lab publishing this test list</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="LabID" type="xs:string" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>ID for the publishing  lab</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Contact" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Contact for the lab about the published test list</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="Name" type="xs:string"/>
+										<xs:element name="PhoneNumber" type="xs:string"/>
+										<xs:element name="Address" type="xs:string"/>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="LabTests" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>List of test and test packages that a lab can perform</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="AvailableTest">
+								<xs:annotation>
+									<xs:documentation>List of individue test a lab can perform and offer as a servcie.</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="Soil">
+											<xs:annotation>
+												<xs:documentation>Soil sample test the lab can perform</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element ref="Tests"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="PlantTissue">
+											<xs:annotation>
+												<xs:documentation>Plant sample test the lab can perform</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element ref="Tests"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Nematode">
+											<xs:annotation>
+												<xs:documentation>Nematode sample test the lab can perform</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element ref="Tests"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="TestPackages" minOccurs="0" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>List of standard test packages the lab offers  </xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="Soil">
+											<xs:annotation>
+												<xs:documentation>Soil test packages</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element ref="Package" maxOccurs="unbounded"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="PlantTissue">
+											<xs:annotation>
+												<xs:documentation>Plant tissue test packages</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element ref="Package" maxOccurs="unbounded"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Nematode">
+											<xs:annotation>
+												<xs:documentation>Nematode test packages</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element ref="Package" maxOccurs="unbounded"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:all>
+									<xs:attribute name="CustomerID" type="xs:string"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="LabServices" minOccurs="0">
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="Soil">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element ref="Service" maxOccurs="unbounded"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="PlantTissue">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element ref="Service" maxOccurs="unbounded"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Nematode">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element ref="Service" maxOccurs="unbounded"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+			</xs:all>
+			<xs:attribute name="Version" type="xs:string" use="required" fixed="2.0"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Package">
+		<xs:annotation>
+			<xs:documentation>Standard lab package of tests</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="Name" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Display name for the package</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Description" type="xs:string" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Description of the package</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="BillingCode" type="xs:string" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Lab billing code ofr the package</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="TestIDs">
+					<xs:annotation>
+						<xs:documentation>List of test ids that make up the package</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="TestID" type="xs:string" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Test ids from the test list</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Test">
+		<xs:annotation>
+			<xs:documentation>Individual test</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="Name" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Display name for the test</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="ModusTestID" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Modis ID for the test</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="BillingCode" type="xs:string" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Lab billing code for the test</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:all>
+			<xs:attribute name="TestID" type="xs:ID" use="required">
+				<xs:annotation>
+					<xs:documentation>Unique ID for the test with in this file</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Tests">
+		<xs:annotation>
+			<xs:documentation>List of tests</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Test"/>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:unique name="ModusTestID">
+			<xs:selector xpath="Test"/>
+			<xs:field xpath="ModusTestID"/>
+		</xs:unique>
+	</xs:element>
+	<xs:element name="Service">
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="Name"/>
+				<xs:element name="Description" type="xs:string" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Description of the package</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="BillingCode" type="xs:string" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Lab billing code of the package</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
